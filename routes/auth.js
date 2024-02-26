@@ -59,7 +59,7 @@ router.post('/newpass/resetPassword',async (req, res) => {
     let token = req.headers.authorization;
     token=token.split(' ')[1];
       const decodedToken = jwt.verify(token,process.env.JWT_SECRET );
-      let hashedPass= await bcrypt.hash(newPass,prcoess.env.HASH);
+      let hashedPass= await bcrypt.hash(newPass,10);
       const user=User.findOneAndUpdate({email:decodedToken.email},{password:hashedPass}).exec();
       if(!user)
       throw "User not found";

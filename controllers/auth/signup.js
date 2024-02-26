@@ -57,7 +57,7 @@ export const signup = async (user) => {
     throw "Please Enter a valid email";
   }
     console.log(user.password)
-    const hashedPass = await bcrypt.hash(user.password, process.env.HASH); // Use an appropriate number of rounds, like 10
+    const hashedPass = await bcrypt.hash(user.password, 10); // Use an appropriate number of rounds, like 10
   
     const data = new User({
         _id:nanoid(),
@@ -69,7 +69,7 @@ export const signup = async (user) => {
       status: "pending",
     });
     await data.save();
-    const hashedPassC = await bcrypt.hash(user.caretakerPassword, process.env.HASH); // Use an appropriate number of rounds, like 10
+    const hashedPassC = await bcrypt.hash(user.caretakerPassword,10); // Use an appropriate number of rounds, like 10
     const careTaker = new Caretaker({
       _id:caretakerID,
     password: hashedPassC,
