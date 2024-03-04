@@ -71,7 +71,7 @@ router.post('/newpass/resetPassword',async (req, res) => {
   }
 });
 
-router.post('/verify', async (req, res) => {
+router.get('/verify', async (req, res) => {
   try {
     let token = req.headers.authorization;
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
