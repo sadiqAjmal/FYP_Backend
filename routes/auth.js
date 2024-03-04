@@ -71,9 +71,8 @@ router.post('/newpass/resetPassword',async (req, res) => {
   }
 });
 
-router.get('/verify', async (req, res) => {
+router.get('/verify/${token}', async (req, res) => {
   try {
-    let token = req.headers.authorization;
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findOneAndUpdate({ email: decodedToken.email }, { status: "verified" });
 
