@@ -5,6 +5,7 @@ import { signup } from '../controllers/auth/signup';
 import { forgotPass } from '../controllers/auth/forgotPass';
 import bcrypt from 'bcrypt'
 import User from '../models/user';
+import Caretaker from '../models/caretaker';
 const router = express.Router();
 router.post('/login', async (req, res) => {
   console.log(req.body)
@@ -73,46 +74,58 @@ router.post('/newpass/resetPassword',async (req, res) => {
 
 router.get(`/verify/:token`, async (req, res) => {
   const { token } = req.params;
-
+  console.log(token);
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decodedToken)
     const user = await User.findOneAndUpdate({ email: decodedToken.email }, { status: "verified" });
-
-    if (user) {
+    const careTaker=await Caretaker.findOneAndUpdate({ email: decodedToken.email }, { status: "verified" })
+    console.log(careTaker)
+    if (careTaker||user) {
       // Render an HTML page with a loader
       res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <title>User Verified</title>
-          <style>
-            body {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              font-family: Arial, sans-serif;
-            }
-            .loader {
-              border: 4px solid #f3f3f3;
-              border-top: 4px solid #3498db;
-              border-radius: 50%;
-              width: 30px;
-              height: 30px;
-              animation: spin 2s linear infinite;
-            }
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="loader"></div>
-          <p>User verified successfully!</p>
-        </body>
-        </html>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>User Verified</title>
+        <style>
+          body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+          }
+          .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+          .hidden {
+            display: none;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="loader"></div>
+        <p id="message" class="hidden">User verified successfully!</p>
+        <script>
+          setTimeout(() => {
+            document.querySelector('.loader').style.display = 'none';
+            document.getElementById('message').style.display = 'block';
+          }, 1000); // 1 second delay
+        </script>
+      </body>
+      </html>
+
       `);
     } else {
       throw new Error("Your Token Has Expired");
