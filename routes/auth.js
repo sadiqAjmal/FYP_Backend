@@ -71,20 +71,54 @@ router.post('/newpass/resetPassword',async (req, res) => {
   }
 });
 
-router.post('/verify',async(req,res)=>{
-  try{
+router.post('/verify', async (req, res) => {
+  try {
     let token = req.headers.authorization;
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    const user=await User.findOneAndUpdate({email:decodedToken.email},{status:"verified"});
-    console.log(decodedToken);
+    const user = await User.findOneAndUpdate({ email: decodedToken.email }, { status: "verified" });
+
     if (user) {
-    res.send("Token Verified");
+      // Render an HTML page with a loader
+      res.send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>User Verified</title>
+          <style>
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              font-family: Arial, sans-serif;
+            }
+            .loader {
+              border: 4px solid #f3f3f3;
+              border-top: 4px solid #3498db;
+              border-radius: 50%;
+              width: 30px;
+              height: 30px;
+              animation: spin 2s linear infinite;
+            }
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="loader"></div>
+          <p>User verified successfully!</p>
+        </body>
+        </html>
+      `);
     } else {
-    throw new Error("Your Token Has Expired");
+      throw new Error("Your Token Has Expired");
     }
+  } catch (err) {
+    res.status(400).send({ error: err.message });
   }
-  catch(err){
-    res.status(400).send({error:err});
-  }
-})
+});
+
 export default router;

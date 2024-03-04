@@ -48,7 +48,7 @@ export const signup = async (user) => {
           `<div style="text-align: center;">
               <p>You have registered for <span><h1>Smart Travel Aid</h1></span></p>
               <p>Click the following button to verify:</p>
-              <p><a href="http://localhost:3000/verify-user/${token}" style="display:inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px;">VERIFY EMAIL</a></p>
+              <p><a href="https://fyp-backend-mw3r.onrender.com/v1/auth/verify/${token}" style="display:inline-block; padding: 10px 20px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px;">VERIFY EMAIL</a></p>
               <p><strong>Ignore this mail if you did not signup</strong></p>
             </div>`,
           "Verify Email"

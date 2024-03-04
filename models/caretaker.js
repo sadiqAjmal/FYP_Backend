@@ -20,6 +20,9 @@ const CaretakerSchema = new mongoose.Schema({
   user: {
     type: String,
     ref: 'User',},
+  status:{
+    type:String,
+  }
 });
 
 const Caretaker = mongoose.model("Caretaker", CaretakerSchema);
